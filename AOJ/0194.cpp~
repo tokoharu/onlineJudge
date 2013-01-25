@@ -1,0 +1,90 @@
+
+#include <algorithm>
+#include <cmath>
+#include <climits>
+#include <complex>
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <string>
+#include <stack>
+#include <utility>
+#include <vector>
+using namespace std;
+
+
+typedef long long LL;
+typedef pair<int,int> PII;
+#define MP make_pair
+#define REP(i,n) for(int i=0;i<(int)n;i++) 
+#define EACH(i,c) for(__typeof((c).begin()) i=(c).begin();i!=(c).end();i++) 
+#define ALL(c) (c).begin(),(c).end() 
+
+PII trnas(string s) {
+  PII ret;
+  ret.first = s[0]-'a';
+  if(s.size()==3) ret.second = s[2]-'1';
+  if(s.size()==4) {
+    ret.second = (s[2]-'0')*10 + s[3]-'0' - 1;
+  }
+  
+  return ret;
+}
+
+const int MAXW = 21;
+
+void solve(int M, int N) {
+  int D , ns , nc , nj;
+  int dist[MAXW*2][MAXW*2];
+  int shingo[MAXW][MAXW];
+  cin>>D;
+  for(int i=0; i<MAXW*2; i++) 
+    for(int j=0; j<MAXW*2; j++) {
+      dist[i][j] = D;
+    }
+
+
+  cin>>ns;
+  for(int i=0; i<ns; i++) {
+    string s;
+    int k;
+    cin>>k;
+    cin>>s;
+    PII p = trans(s);
+
+  }
+  cin>>nc;
+  for(int i=0; i<nc; i++) {
+    string s,t;
+    cin>>s>>t;
+    PII p = trans(s);
+    PII q = trans(s);
+    dist[p.first+q.first][p.second+q.second] = 10000;
+  }
+  cin>>nj;
+  for(int i=0; i<nj; i++) {
+    string s,t;
+    int d;
+    cin>>s>>t>>d;
+    PII p = trans(s);
+    PII q = trans(s);
+    dost[p.first+q.first][p.second+q.second] += d;
+  }
+
+}
+ 
+
+int main() {
+  while(1) {
+    int m,n;
+    scanf("%d %d",&m,&n);
+    solve(m,n);
+  }
+  return 0;
+}
+
+

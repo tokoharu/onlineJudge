@@ -1,0 +1,149 @@
+
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <string>
+#include <stack>
+#include <utility>
+#include <vector>
+using namespace std;
+
+
+typedef long long LL;
+typedef pair<int,int> PII;
+#define MP make_pair
+#define REP(i,n) for(int i=0;i<(int)n;i++) 
+#define EACH(i,c) for(__typeof((c).begin()) i=(c).begin();i!=(c).end();i++) 
+#define ALL(c) (c).begin(),(c).end() 
+
+
+
+#define MAX_V 3100
+int INF = 2000000000;
+int V;//頂点数
+
+struct edge { int to, cap, cost, rev; };
+
+
+vector<edge> G[MAX_V];
+int h[MAX_V];
+int dist[MAX_V];
+int prevv[MAX_V];
+int preve[MAX_V];
+
+void add_edge(int from, int to, int cap, int cost ) {
+	
+	G[from].push_back( (edge){to, cap, cost, G[to].size()}  );
+	G[to].push_back( (edge){from, 0, -cost, G[from].size()-1} );
+}
+
+
+int min_cost_flow(int s, int t, int f){
+	
+	int res = 0;
+	fill( h, h+V, 0 );
+	
+	while( f>0 ) {
+	  //		cout<<f<<endl;
+		priority_queue<PII ,vector<PII>, greater<PII> > que;
+		
+		fill(dist, dist+V, INF);
+		dist[s] = 0;
+		que.push( PII( 0 , s ) ) ;
+		while( !que.empty() ){
+			PII p = que.top();
+			que.pop();
+			
+			int v = p.second;
+			if( dist[v]<p.first )continue;
+			for(int i=0; i<G[v].size(); i++) {
+				edge &e = G[v][i];
+				if( e.cap>0 && dist[e.to]>dist[v]+e.cost+h[v]-h[e.to] ){
+					dist[e.to] = dist[v] + e.cost + h[v] -h[e.to];
+					prevv[e.to] = v;
+					preve[e.to] = i;
+					que.push( PII( dist[e.to], e.to ) );
+				}
+			}
+		}
+		
+		if(dist[t] == INF) { 
+			return -1;
+		}
+		
+		for(int v=0; v<V; v++) h[v] += dist[v];
+		
+		int d = f;
+		for(int v = t; v!=s; v=prevv[v]){
+			d = min( d, G[prevv[v]][preve[v]].cap );
+		}
+		
+		f -= d;
+		res += d*h[t];
+		for(int v=t; v!=s; v=prevv[v]) { 
+			edge &e = G[prevv[v]][preve[v]];
+			e.cap -= d;
+			G[v][e.rev].cap += d;
+		}
+	}
+	
+	return res;
+}
+
+
+//最初にV(頂点数)を設定しないと無限ループに陥るので注意。
+//あと、最初からcout埋め込んでいるので消しておきましょう
+//繰り返すときにはG[a]の初期化を忘れないこと
+//多重辺があるときには死んでしまうので、適切に処理せよ
+
+//ここまでコピペ推奨
+
+
+int main() {
+  int n;
+  cin>>n;
+  vector<PII>input;
+  set<int> nums;
+  int score = 0;
+  for(int i=0; i<n; i++) {
+    int p,q;
+    cin>>p>>q;
+    input.push_back(MP(p,q));
+    nums.insert(p);
+    nums.insert(q);
+    score += p + q;
+  }
+  map<int,int> mapping;
+  int m = nums.size();
+  V = m+n+5;
+  int source = m+n;
+  int sink = m+n+1;
+  int dummy = m+n+2;
+  int index = 0;
+  add_edge(source,dummy,1100,0);
+  EACH(i,nums) {
+    mapping[*i] = index;
+    add_edge(source,index,1,0);
+    //    cout<<*i<<" "<<index<<endl;
+    index++;
+  }
+
+  for(int i=0; i<input.size();i++) {
+    int p = input[i].first;
+    int q = input[i].second;
+    //    cout<<mapping[p]<<" "<<mapping[q]<<endl;
+    add_edge(i+index,sink,1,0);
+    add_edge(mapping[p],i+index,1,p);
+    add_edge(mapping[q],i+index,1,q);
+    add_edge(dummy     , i+index,1,p+q);
+  }
+  //  cout<<score<<endl;
+  cout<<score-min_cost_flow(source,sink,n)<<endl;
+
+  return 0;  
+}
+

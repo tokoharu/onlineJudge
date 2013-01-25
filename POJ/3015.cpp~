@@ -1,0 +1,32 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+using namespace std;
+
+void solve(int n, int m) {
+  vector<int> input;
+  for(int i=0; i<n; i++) {
+    int p;
+    scanf("%d",&p);
+    input.push_back(p);
+  }
+  double ret = 0;
+  double k = 1;
+  for(int i=m; i<n; i++) {
+    ret += (double) (input[i] - input[n-1-i]) * k ;
+    k *= (double)i/(i-m+1)
+  }
+  cout<<ret<<endl;
+  
+}
+
+
+int main() {
+  while(1) {
+    int n,m;
+    cin>>n>>m;
+    if(n==0 && m==0) break;
+    solve(n,m);
+  }
+  return 0;
+}

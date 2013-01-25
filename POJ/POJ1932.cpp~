@@ -1,0 +1,58 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+using namespace std;
+
+const int NUM = 101;
+void solve(int n) {
+  int dist[NUM];
+  bool reached[NUM];
+  for(int i=0; i<=n; i++) dist[i] = -1000000;
+  dist[0] = 100;
+
+  vector<int> energy;
+  vector<int> next[NUM];
+  for(int i=0; i<n; i++) {
+    int p,m;
+    scanf("%d %d",&p,&m);
+    energy.push_back(p);
+    for(int j=0; j<m; j++) {
+      int k;
+      scanf("%d",&k);
+      k--;
+      next[i].push_back(k); 
+    }
+    reached = false;
+  }
+  reached[0] = true;
+  for(int i=0; i<n+5; i++) {
+    int tmp[NUM];
+    bool update= false;
+    for(int j=0; j<=n; j++) tmp[j] = -1000000;
+    for(int j=0; j<m; j++) {
+      for(int k=0; k<next[j].size(); k++) {
+	int dest = next[j][k];
+	int newDist = energy[dest]+dist[j];
+	reached[dest] |= reached[j];
+	if(newDist>0) {
+	  update = true;
+	  tmp[dest] = max(tmp[dest] , newDist );
+	}
+      }
+    }
+    for(int j=0; j<n; j++) dist[j] = tmp[j];
+    if(i>n+1) if(update && reached[n-1]) return true;
+  }
+  return false;
+}
+
+int main() {
+  while(1) {
+    int n;
+    cin>>n;
+    if(solve(n))cout<<"winnable"<<endl;
+    else       cout<< "hopeless"<<endl;
+    if(n==-1) break;
+  }
+  return 0;
+}
