@@ -1,0 +1,50 @@
+#include<iostream>
+#include<vector>
+#include<cmath>
+using namespace std;
+
+const int NUM = 2*2*2*2*3*3*5*7*11;
+int cnt[NUM];
+void solve(int n) {
+  for(int i=0; i<NUM; i++) {
+    cnt[i] = 0;
+  }
+  vector<int> data[25];
+  for(int i=1; i<25; i++) {
+    for(int j=0; j<i; j++) data[i].push_back(0);
+  }
+  for(int i=0; i<n; i++) {
+    int d,t;
+    cin>>d>>t;
+    for(int j=0; j<d; j++) {
+      int p;
+      cin>>p;
+      data[d][(j-t+d)%d] += p;
+    }
+  }
+  for(int i=1; i<=24; i++) if(NUM%i==0) {
+      for(int j=0; j<NUM; j++) cnt[j] += data[i][j%i];
+  }
+  int ans;
+  {
+    int maxim = 0;
+    for(int i=0; i<NUM; i++) maxim = max(maxim , cnt[i]);
+    ans += maxim;
+  }
+  for(int i=1; i<=24; i++) if(NUM%i!=0){
+      int maxim = 0;
+      for(int j=0; j<i; j++) maxim = max(maxim, data[i][j] );
+      ans += maxim;
+  }
+  cout<<ans<<endl;
+}
+
+int main() {
+  while(1) {
+    int n;
+    cin>>n;
+    if(n==0) break;
+    solve(n);
+  }
+  return 0;
+}

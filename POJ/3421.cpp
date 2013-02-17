@@ -1,0 +1,55 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<vector>
+using namespace std;
+
+
+int comb[25][25];
+void initComb() {
+  for(int i=0; i<25; i++) comb[i][0] = comb[i][i] = 1;
+  for(int i=1; i<25; i++)
+    for(int j=1; j<i; j++)
+      comb[i][j] = comb[i-1][j] + comb[i-1][j-1];
+}
+
+
+void solve(int n) {
+  vector<int> data;
+  for(int i=2; n!=1 ; i++) {
+    int cnt = 0;
+    while(n%i==0) {
+      cnt++;
+      n/=i;
+    }
+    if(cnt>0) data.push_back(cnt);
+    if(n>1 && n<i*i) {
+      data.push_back(1);
+      break;
+    } 
+  }
+  int sum = 0;
+  for(int i=0; i<data.size(); i++) 
+    sum += data[i];
+  cout<<sum<<" ";
+  int res = 1;
+  for(int i=0; i<data.size(); i++) {
+    res *= comb[sum][data[i]];
+    sum -= data[i];
+    //    cout<<data[i]<<endl;
+  }
+  cout<<res<<endl;
+}
+
+
+int main() {
+  initComb();
+  while(true) {
+    int p;
+    cin>>p;
+    if(cin.eof()) break;
+    solve(p);
+  }
+  
+  return 0;
+}

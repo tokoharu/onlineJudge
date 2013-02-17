@@ -1,0 +1,37 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+#include<utility>
+typedef long long LL;
+typedef pair<int,int> PII;
+#define MP make_pair
+
+const int MAXS = 1000010;
+PII data[2*MAXS];
+int dp[2*MAXS];
+
+int main() {
+  int n,m,r;
+  cin>>n>>m>>r;
+
+  for(int i=0; i<=n; i++) { 
+    data[i] = MP(-1,-1);
+    dp[i] = 0;
+  }
+  for(int i=0; i<m; i++) {
+    int a,b,c;
+    scanf("%d%d%d",&a,&b,&c);
+    data[a] = MP(b+r,c);
+  }
+  int maxim = 0;
+  for(int i=0; i<2*n; i++) {
+    maxim = max(maxim,dp[i]);
+    if(data[i].first!=-1) {
+      int dest = data[i].first;
+      dp[dest] = max(dp[dest] , maxim + data[i].second);
+    }
+    
+  }
+  cout<<maxim<<endl;
+  return 0;
+}

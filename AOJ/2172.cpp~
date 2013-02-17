@@ -1,0 +1,27 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+using namespace std;
+
+LL calc(LL med) {
+  LL t = med/2;
+  return t*t+t*(med%2);
+}
+
+
+int main() {
+  int k;
+  cin>>k;
+  LL left = 0;
+  LL right = 1000000000;
+  while(left+1<right) {
+    LL med = left+right;
+    med /= 2;
+    LL tmp = calc(med);
+    if(tmp<k)left = med;
+    else right = med;
+  }
+  cout<<left<<endl;
+  return 0;
+  
+}

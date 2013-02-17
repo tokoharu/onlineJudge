@@ -1,0 +1,41 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<vector>
+#include<utility>
+using namespace std;
+
+void generate(vector<int> &apple , int d,int cnt, int mod) {
+  int now = apple[0];
+  for(int i=1; i<cnt; i++) {
+    now = now*58+d;
+    now %= mod;
+    apple.push_back(now);
+  }
+  sort(apple.begin() , apple.end());
+  reverse(apple.begin() , apple.end()) ;
+}
+
+
+int main() {
+  int M,N;
+  cin>>M>>N;
+  vector<int> kiwi;
+  vector<int> rng;
+
+  int md,nd;
+  {
+    int p,r;
+    cin>>p>>md>>r>>nd;
+    rng.push_back(p);
+    kiwi.push_back(r);
+  }
+  generate(kiwi,md,M,N+1);
+  generate(rng,nd,N,M+1);
+
+
+
+
+
+  return 0;
+}

@@ -1,0 +1,35 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+typedef long long LL;
+
+LL power(LL a,LL n,LL mod ) {
+  if(n==1) return a;
+  LL ret = power(a,n/2,mod);
+  ret *= ret;
+  ret %= mod;
+  if(n%2==1) {
+    ret *= a;
+    ret %= mod;
+  }
+  return ret;
+}
+
+
+void solve(LL p,LL a) {
+  LL res = power(a,p,p);
+  if(res!=a) return false;
+  return true;
+}
+ 
+
+int main() {
+  while(true) {
+    LL p,a;
+    cin>>p>>a;
+    bool ok = solve(p,a);
+    if(ok) cout<<"yes"<<endl;
+    else  cout<<"no"<<endl;
+  }
+  return 0;
+}
