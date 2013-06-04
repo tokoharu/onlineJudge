@@ -1,0 +1,183 @@
+#include <algorithm>
+#include <cmath>
+#include <climits>
+#include <complex>
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <string>
+#include <stack>
+#include <utility>
+#include <vector>
+using namespace std;
+
+
+typedef long long LL;
+typedef pair<int,int> PII;
+#define MP make_pair
+#define REP(i,n) for(int i=0;i<(int)n;i++) 
+#define EACH(i,c) for(__typeof((c).begin()) i=(c).begin();i!=(c).end();i++) 
+#define ALL(c) (c).begin(),(c).end() 
+
+int INF = (int) (1e5)+10;
+#define MAX_V 5000
+struct edge { int to,cap,rev;};
+
+vector<edge> G[MAX_V];
+int level[MAX_V];
+int iter[MAX_V];
+
+void add_edge(int from, int to,int cap)  {
+  G[from].push_back((edge){to,cap,G[to].size()});
+  G[to].push_back((edge){from,0,G[from].size()-1});
+}
+void add_edge_un(int from , int to,int cap) {
+
+  G[from].push_back((edge){to,cap,G[to].size()});
+  G[to].push_back((edge){from,cap,G[from].size()-1});
+}
+
+void bfs(int s) {
+  //	memset(level,-1,sizeof(level)) ;
+  for(int a=0; a<MAX_V; a++)level[a]=-1;
+  queue<int>que;
+  level[s]=0;
+  que.push(s);
+  while(!que.empty()) {
+    int v = que.front();
+    que.pop();
+    for(int i=0; i<G[v].size(); i++) {
+      edge &e = G[v][i];
+      if(e.cap>0 && level[e.to]<0) {
+	level[e.to] = level[v]+1;
+	que.push(e.to) ;
+      }
+    }
+  }
+}
+
+int dfs(int v,int t,int f) {
+  if(v==t) return f;
+  for(int &i = iter[v]; i<G[v].size(); i++) {
+    edge &e = G[v][i];
+    if(e.cap>0 && level[v] < level[e.to]) {
+      int d = dfs(e.to,t,min(f,e.cap)) ;
+      if(d>0) {
+	e.cap -=d;
+	G[e.to][e.rev].cap += d;
+	return d;
+      }
+    }
+  }
+  return 0;
+}
+
+int V;
+int max_flow(int s,int t) {
+  int flow = 0;
+  
+  for(;;) {
+    bfs(s);
+    if(level[t]<0) return flow;
+    //		memset(iter,0,sizeof(iter)) ;
+    for(int a=0; a<MAX_V; a++ ) iter[a]=0;
+    int f;
+    while((f=dfs(s,t,INF))>0) {
+      flow += f;
+    }
+  }
+}
+
+void traverse(int s , vector<int> &vis) {  
+  vis.resize(V);
+  //  cout<<V<<" "<<s<<endl;
+  REP(i,V) 
+    vis[i] = 0;
+  vis[s] = 1;
+  queue<int> qu;
+  qu.push(s);
+  while(!qu.empty()) {
+    int v = qu.front(); qu.pop();
+    //    cout<<v<<endl;
+    REP(i,G[v].size()) {
+      int u = G[v][i].to;
+      int c = G[v][i].cap;
+      if(c!=0 && vis[u]==0) { 
+	vis[u] = 1;
+	qu.push(u);
+      }
+    } 
+  }
+}
+
+const int MAXN = 2000;
+int A[MAXN];
+int B[MAXN];
+
+int main() {
+  int n,w;
+  cin>>n>>w;
+  int score = 0;
+  for(int i=0; i<n; i++) {
+    cin>>A[i]; 
+    score += A[i];
+  }
+  for(int i=0; i<n; i++) {
+    cin>>B[i];
+    score += B[i];
+  }  
+  
+  V = 2*w+n+10;
+  int best = 0;
+  string last;
+  for(int total=0; total<2; total++) {
+    for(int i=0; i<MAX_V; i++)
+      G[i].clear();
+    
+    int s = 2*w+n+5;
+    int t = s+1;
+    //    add_edge(0,t,INF);
+    REP(i,w+1)  {
+      if(i%2==1)
+	add_edge(s,i,INF);
+      else 
+	add_edge(i,t,INF);
+      
+    }
+     
+    REP(i,w+1) {
+      if((i+w+n+total)%2==0)
+	add_edge(s,i+w+n,INF);
+      else 
+	add_edge(i+w+n,t,INF);
+    }
+    REP(i,n) {
+      add_edge_un(i+w,i+w+1,A[i]);
+      //      add_edge(i+w+1,i+w,A[i]);
+      add_edge_un(i,i+w+w+1,B[i]);
+      //      add_edge(i+w+w+1,i,B[i]);
+    } 
+    int ans = max_flow(s,t);
+    //    cout<<score-ans<<endl;
+    
+    if(best<=score-ans) {
+      best = score-ans;
+      vector<int> vis;
+      traverse(s,vis);
+      last="";
+      for(int i=0; i<n; i++) {
+	if(vis[i+w]==vis[i+w+1])
+	  last += "1";
+	else 
+	  last += "0";
+      }
+    }
+  }
+  //  cout<<score-best<<endl;  
+  cout<<last<<endl;
+  return 0;
+}

@@ -35,7 +35,7 @@ bool solve(int n) {
 	cnt++;
   cnt/=2;
   int edge = n * (n-1) /2;
-  cout<<edge<<" "<<cnt<<endl;
+//  cout<<edge<<" "<<cnt<<endl;
   if(n%2==1) {
     if((edge-cnt)%2==0) return false;
     return true;
@@ -67,6 +67,7 @@ bool solve(int n) {
     return false; 
   }
   if(cnteven==0 && cntBunkatu<=3 ) return false;
+return true;
 }
 
 int main() {

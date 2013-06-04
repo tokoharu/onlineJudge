@@ -1,0 +1,20 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cmath>
+#include<algorithm>
+#include<vector>
+#include<set>
+#include<map>
+#include<utility>
+#include<stack>
+#include<queue>
+
+typedef long long LL;
+typedef pair<int,int> PII;
+#define MP make_pair
+
+int main() {
+
+  return 0;
+}

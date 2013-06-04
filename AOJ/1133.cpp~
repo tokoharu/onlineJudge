@@ -1,0 +1,15 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<string>
+#include<algorithm>
+#include<set>
+#include<queue>
+#include<utility>
+#include<vector>
+
+using namespace std;
+typedef pair<int,int> PII;
+typedef long long LL;
+
+#define MP make_pair

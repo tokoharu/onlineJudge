@@ -1,0 +1,61 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<string>
+
+using namespace std;
+typedef long long LL;
+typedef pair<int,int> PII;
+#define MP make_pair
+
+
+const int MAXN = 100007;
+vector<int> graph[MAXN];
+LL cnt[MAXN];
+int parent[MAXN];
+
+
+bool solve(int casenum) {
+  int N,M;
+  cin>>n>>m;
+  if(n==0 && m==0) return false;
+  for(int i=0; i<n; i++)
+    grpah[i].clear();
+    
+  for(int i=0; i<n; i++) {
+    int p;
+    scanf("%d",&p);
+    cnt[i] = p;
+  }
+  for(int i=0; i<m; i++) {
+    int p,q;
+    scanf("%d%d",&p,&q);
+    p--;q--;
+    graph[p].push_back(q);
+    graph[q].push_back(p);
+  }
+  stack<PII>  sta;
+  vector<int> order;
+  sta.push(MP(0,-1));
+  while(!sta.empty()) {
+    PII tmp = sta.top();sta.pop();
+    int cur = tmp.first;
+    int par = tmp.second;
+    order.push_back(cur);
+    for(int i=0; i<graph[cur].size(); i++) {
+      int next = graph[cur][i];
+      if(next=)
+      
+    }
+    
+  }
+  return true;
+}
+
+
+int main() {
+  for(int i=1;; i++) 
+    if(!solve(i+1))
+      break;
+  return 0;
+}

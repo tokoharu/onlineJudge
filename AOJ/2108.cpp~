@@ -1,0 +1,38 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<string>
+#include<vector>
+using namsespace std;
+
+typedef long long LL;
+typedef pair<int,int> PII;
+
+#define MP make_pair
+
+int G[55][55];
+
+
+void solve() {
+  int n;
+  cin>>n;
+  for(int i=0; i<n; i++) 
+    for(int j=0; j<n; j++) {
+      cin>>G[i][j];
+      if(i==j) G[i][j] = i;
+      
+    }
+  int Alice, Bob;
+  cin>>Alice>>Bob;
+  
+}
+
+
+int main() {
+  int t;
+  cin>>t;
+  for(int i=0; i<t; i++)
+    solve();
+  
+  return 0;
+}

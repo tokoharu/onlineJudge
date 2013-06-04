@@ -1,0 +1,35 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<string>
+#include<algorithm>
+#include<utility>
+#include<map>
+#include<queue>
+#include<stack>
+#include<vector>
+using namespace std;
+
+int input[100][100];
+bool solve() {
+  int n,m,p;
+  cin>>n>>m>>p;
+  if(n==0 && m==0 && p==0) return false;
+  vector<string> var;
+  for(int i=0; i<m; i++) {
+    string s;
+    cin>>s;
+    var.push_back(s);
+    for(int j=0; j<n; j++) {
+      cin>>input[i][j];
+    }
+  }
+  
+  
+}
+
+int main() {
+  while(true) if(!solve()) break;
+  return 0;
+  
+}

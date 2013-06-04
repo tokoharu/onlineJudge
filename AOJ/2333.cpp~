@@ -1,0 +1,61 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<algorithm>
+#include<vector>
+#include<set>
+#include<map>
+#include<stack>
+#include<queue>
+#include<utility>
+using namespace std;
+
+#define MP make_pair
+typedef long long LL;
+typedef pair<int,int> PII;
+
+LL MOD = 1000000007;
+
+void solve(){
+  int N,W;
+  cin>>N>>W;
+  vector<int> input;
+  vector<int> allSum;
+  {
+    int sum = 0;
+    bool ok = true;
+    for(int i=0; i<N; i++) {
+      int p;
+      scanf("%d",&p);
+      input.push_back(p);
+      sum += p;
+      allSum.push_back(sum);
+      if(p<=W) ok = false;
+    }
+    if(sum<=W || ok) {
+      cout<<1<<endl;
+      return ;
+    }
+  }
+  
+  sort(input.begin() , input.end());
+  
+  const int MAXW = 10010;
+  int dp[MAXW];
+  for(int i=0; i<MAXW; i++) dp[i] = 0;
+  dp[W] = 1;
+  for(int i=N-1; i>=0; i--) {
+    
+    
+    
+    
+  }
+  
+}
+
+
+int main() {
+  solve();
+  
+  return 0;
+}

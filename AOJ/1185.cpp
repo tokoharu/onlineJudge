@@ -1,0 +1,165 @@
+/*
+AOJ1185
+チョコレート分割
+
+特殊な前提条件が気になるが、これは外側の形状の特徴を抽出して解けるという状況があるためである。
+そんなわけで、角の個数を数えること
+二方向でうまいこと切れる箇所を列挙して互いに影響を及ぼさないように出来るだけ取りたいので二部マッチングの結果を用いる。
+
+ */
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<algorithm>
+#include<utility>
+#include<vector>
+using namespace std;
+
+const int MAXN = 105;
+
+const int MAX_V = 1000;
+int V;
+vector<int> G[MAX_V];
+int match[MAX_V];
+bool used[MAX_V];
+
+void add_edge(int u , int v) {
+  G[u].push_back(v);
+  G[v].push_back(u);
+}
+bool dfs(int v) {
+  used[v] = true;
+  for(int i=0; i<G[v].size(); i++) {
+    int u = G[v][i] , w  =match[u];
+    if(w<0 || !used[w] && dfs(w)) {
+      match[v] = u;
+      match[u] = v;
+      return true;
+    }
+  }
+  return false;
+}
+
+int bipartite_matching() {
+  int res = 0;
+  //  memset(match , -1,  sizeof(match));
+  for(int i=0; i<MAX_V; i++) match[i] = -1;
+  for(int v=0; v<V; v++) {
+    if(match[v]<0) {
+      for(int i=0; i<MAX_V; i++) used[i] = false; 
+      //      memest(used,0,sizeof(used));
+      if(dfs(v)) res++;
+    }
+  }
+  return res;
+}
+
+
+
+void solve(int h, int w) {
+  int table[MAXN][MAXN];
+  int data[MAXN][MAXN];
+  for(int i=0; i<MAX_V; i++)
+    G[i].clear();
+
+  for(int i=0; i<MAXN; i++)
+    for(int j=0; j<MAXN; j++) {
+      table[i][j] = 0;
+      data[i][j] = -1;
+    }
+  for(int i=0; i<h; i++) {
+    string s;
+    cin>>s;
+    for(int j=0; j<w; j++) {
+      if(s[j]=='#')
+	table[i+1][j+1] = 1;
+    }
+  }/*
+  for(int i=0; i<=h+1; i++,cout<<endl)
+    for(int j=0; j<=w+1; j++)
+      cout<<table[i][j];
+   */
+  int cntCorner = 0;
+  
+  for(int i=0; i<=h+1; i++) 
+    for(int j=0; j<=w+1; j++) { 
+      int cnt = 0;
+      for(int y=0; y<2; y++)
+	for(int x=0; x<2; x++) 
+	  cnt += table[i+y][j+x];
+      if(cnt==1 || cnt==3) 
+	cntCorner ++; 
+    }
+  // cout<<cntCorner<<endl;
+  int ans =(cntCorner-2)/2;  
+
+
+  int iter = 0;
+  for(int i=0; i<=h+1; i++) {
+    bool ok = false;
+    int prev = 1000;
+    for(int j=0; j<=w+1; j++) {
+      int cnt = table[i][j]+table[i+1][j];
+      if(cnt==1) {
+	if(ok && j-prev>1) {
+	  for(int k=prev; k<j; k++)
+	    data[i][k] = iter;
+	  iter++;
+	}
+	ok = true;
+	prev = j;
+      }
+      if(cnt==0)
+	ok = false;
+    }
+  }
+  for(int j=0; j<=w+1; j++) {
+    bool ok = false;
+    int prev = 1000;
+    for(int i=0; i<=h+1; i++) {
+      int cnt = table[i][j]+table[i][j+1];
+      if(cnt==1) {
+	if(ok && i-prev>1) {
+	  for(int k=prev; k<i; k++) {
+	    if(data[k][j]!=-1) {
+	      add_edge(iter , data[k][j]);
+	    }
+	  }
+	  iter++;
+	}
+	ok = true;
+	prev = i;
+      }
+      if(cnt==0)
+	ok = false;
+    }
+
+    
+  }
+
+  /*  
+  for(int i=0; i<h+1; i++ , cout<<endl) {
+    for(int j=0; j<w+1; j++) {
+      //      cout<<hozon[i][j]<<" ";
+      printf("%2d ",data[i][j]);
+    }
+    }*/
+  V = iter;
+  // cout<<ans<<" "<<bipartite_matching()<<" "<<iter<<endl;
+
+  cout<<ans + bipartite_matching() - iter<<endl;
+
+}
+
+
+int main() {
+  while(1) {
+    int h,w;
+    cin>>h>>w;
+    if(h==0 && w==0)
+      break;
+    solve(h,w);
+    
+  }
+  return 0;
+}
